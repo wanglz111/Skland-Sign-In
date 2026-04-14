@@ -21,6 +21,8 @@ jobs:
 
     env:
       TZ: Asia/Shanghai
+      # 强制使用 Node.js 24 运行官方 Actions 插件，以消除 Node.js 20 弃用警告
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout
@@ -60,6 +62,12 @@ jobs:
               if not config.endswith("\n"):
                   f.write("\n")
           PY
+
+      - name: Random delay
+        run: |
+          delay=$((RANDOM % 120 + 1))
+          echo "为了防止触发风控，随机延时 $delay 秒后开始执行签到..."
+          sleep $delay
 
       - name: Run sign-in
         run: python main.py
